@@ -34,4 +34,8 @@ public class ProductService {
     public void removeProduct(int id) {
         productsList.removeIf(s->s.getId()==id);
     }
+
+    public Product getById(int id) {
+        return productsList.stream().filter(s->s.getId()==id).findFirst().orElse(null);
+    }
 }

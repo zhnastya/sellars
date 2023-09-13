@@ -1,41 +1,34 @@
 package com.example.sellars.service;
 
 import com.example.sellars.models.Product;
+import com.example.sellars.repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class ProductService {
-    private List<Product> productsList = new ArrayList<>();
-    private int id = 0;
+    private final ProductRepository repository;
 
-    {
-        productsList.add(
-                new Product(++id, "PlayStation", "new Game Controller",
-                        50000, "Moscow", "Anastasia"));
-        productsList.add(
-                new Product(++id, "PlayStation 4", "Game Controller",
-                        60000, "Moscow", "Alex"));
-
-    }
-
-    public List<Product> getProductsList() {
-        return productsList;
+    public List<Product> getProductsList(String title) {
+        if (title!=null) repository.findByTitle(title);
+        return repository.findAll();
     }
 
     public void saveProduct(Product product) {
-        product.setId(++id);
-        productsList.add(product);
+        log.info("SAVE new {}", product);
+        repository.save(product);
     }
 
     public void removeProduct(int id) {
-        productsList.removeIf(s->s.getId()==id);
+        repository.deleteById(id);
     }
 
     public Product getById(int id) {
-        return productsList.stream().filter(s->s.getId()==id).findFirst().orElse(null);
+        return repository.findById(id).orElse(null);
     }
 }

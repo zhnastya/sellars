@@ -16,8 +16,8 @@ public class ProductController {
     private final ProductService service;
 
     @GetMapping("/")
-    public String getProduct(Model model) {
-        model.addAttribute("products", service.getProductsList());
+    public String getProduct(@RequestParam(name = "title", required = false) String title, Model model) {
+        model.addAttribute("products", service.getProductsList(title));
         return "products";
     }
 
@@ -28,13 +28,13 @@ public class ProductController {
     }
 
     @PostMapping("/product/delete/{id}")
-    public String delete(@PathVariable int id) {
+    public String delete(@PathVariable Integer id) {
         service.removeProduct(id);
         return "redirect:/";
     }
 
     @GetMapping("/product/{id}")
-    public String getById(@PathVariable int id, Model model) {
+    public String getById(@PathVariable Integer id, Model model) {
         model.addAttribute("product", service.getById(id));
         return "product-info";
     }

@@ -24,6 +24,7 @@ public class ProductController {
         return "products";
     }
 
+
     @GetMapping("/product/{id}")
     public String productInfo(@PathVariable Long id, Model model) {
         Product product = productService.getProductById(id);
@@ -38,6 +39,7 @@ public class ProductController {
         productService.saveProduct(product, file1, file2, file3);
         return "redirect:/";
     }
+
 
     @PostMapping("/product/delete/{id}")
     public String deleteProduct(@PathVariable Long id) {

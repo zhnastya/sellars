@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>SELLARS</title>
+    <title>ПРОДАВАН</title>
 </head>
 <body>
-<h1>SELLARS</h1><hr>
+<h1>ПРОДАВАН</h1><hr>
 <h4>Подробная информация о товаре</h4>
 <#list images as img>
     <img src="/images/${img.id}" height="60px"/><br><br>

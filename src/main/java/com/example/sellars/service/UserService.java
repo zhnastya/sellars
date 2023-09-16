@@ -12,18 +12,17 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 public class UserService {
-    private final UserRepository repository;
-    private final PasswordEncoder encoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public boolean createUser(User user){
-        String email = user.getEmail();
-        if (repository.findByEmail(email)!=null) return false;
+    public boolean createUser(User user) {
+        String userEmail = user.getEmail();
+        if (userRepository.findByEmail(userEmail) != null) return false;
         user.setActive(true);
-        user.setPassword(encoder.encode(user.getPassword()));
         user.getRoles().add(Role.ROLE_USER);
-        log.info("Saving new User by email - {}", email);
-        repository.save(user);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        log.info("Saving new User with email: {}", userEmail);
+        userRepository.save(user);
         return true;
     }
-
 }

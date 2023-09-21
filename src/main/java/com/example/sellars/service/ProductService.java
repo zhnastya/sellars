@@ -30,21 +30,21 @@ public class ProductService {
     public void saveProduct(Principal principal, Product product, MultipartFile file1,
                             MultipartFile file2, MultipartFile file3) throws IOException {
         product.setUser(getUserByPrincipal(principal));
-        Image image1;
-        Image image2;
-        Image image3;
+        Image imageForProduct1;
+        Image imageForProduct2;
+        Image imageForProduct3;
         if (file1.getSize() != 0) {
-            image1 = toImageEntity(file1);
-            image1.setPreviewImage(true);
-            product.addImageToProduct(image1);
+            imageForProduct1 = toImageEntity(file1);
+            imageForProduct1.setPreviewImage(true);
+            product.addImageToProduct(imageForProduct1);
         }
         if (file2.getSize() != 0) {
-            image2 = toImageEntity(file2);
-            product.addImageToProduct(image2);
+            imageForProduct2 = toImageEntity(file2);
+            product.addImageToProduct(imageForProduct2);
         }
         if (file3.getSize() != 0) {
-            image3 = toImageEntity(file3);
-            product.addImageToProduct(image3);
+            imageForProduct3 = toImageEntity(file3);
+            product.addImageToProduct(imageForProduct3);
         }
         log.info("Saving new Product. Title: {}; Author: {}", product.getTitle(), product.getUser().getName());
         Product productFromDb = productRepository.save(product);
@@ -55,13 +55,13 @@ public class ProductService {
     }
 
     private Image toImageEntity(MultipartFile file) throws IOException {
-        Image image = new Image();
-        image.setName(file.getName());
-        image.setOriginalFileName(file.getOriginalFilename());
-        image.setContentType(file.getContentType());
-        image.setSize(file.getSize());
-        image.setBytes(file.getBytes());
-        return image;
+        Image imageForProduct = new Image();
+        imageForProduct.setName(file.getName());
+        imageForProduct.setOriginalFileName(file.getOriginalFilename());
+        imageForProduct.setContentType(file.getContentType());
+        imageForProduct.setSize(file.getSize());
+        imageForProduct.setBytes(file.getBytes());
+        return imageForProduct;
     }
 
     public User getUserByPrincipal(Principal principal){

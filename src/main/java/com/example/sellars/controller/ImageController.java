@@ -1,4 +1,5 @@
 package com.example.sellars.controller;
+
 import com.example.sellars.models.Image;
 import com.example.sellars.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,11 +19,27 @@ public class ImageController {
 
     @GetMapping("/images/{id}")
     private ResponseEntity<?> getImageById(@PathVariable Long id) {
-        Image image = imageRepository.findById(id).orElse(null);
-        return ResponseEntity.ok()
-                .header("fileName", image.getOriginalFileName())
-                .contentType(MediaType.valueOf(image.getContentType()))
-                .contentLength(image.getSize())
-                .body(new InputStreamResource(new ByteArrayInputStream(image.getBytes())));
+        Image imageForProduct = imageRepository.findById(id).orElse(null);
+        if (imageForProduct !=null) {
+            return ResponseEntity.ok()
+                    .header("fileName", imageForProduct.getOriginalFileName())
+                    .contentType(MediaType.valueOf(imageForProduct.getContentType()))
+                    .contentLength(imageForProduct.getSize())
+                    .body(new InputStreamResource(new ByteArrayInputStream(imageForProduct.getBytes())));
+        }
+        return null;
+    }
+
+    @GetMapping("/images/avatar/{id}")
+    private ResponseEntity<?> getAvatarById(@PathVariable Long id) {
+        Image avatar = imageRepository.findById(id).orElse(null);
+        if (avatar !=null) {
+            return ResponseEntity.ok()
+                    .header("fileName", avatar.getOriginalFileName())
+                    .contentType(MediaType.valueOf(avatar.getContentType()))
+                    .contentLength(avatar.getSize())
+                    .body(new InputStreamResource(new ByteArrayInputStream(avatar.getBytes())));
+        }
+        return null;
     }
 }

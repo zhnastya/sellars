@@ -19,8 +19,8 @@ public class User implements UserDetails {
     private Long id;
     @Column(name = "email", unique = true)
     private String email;
-    @Column(name = "numberPhone", unique = true)
-    private String numberPhone;
+    @Column(name = "phone_number")
+    private String phoneNumber;
     @Column(name = "name")
     private String name;
     @Column(name = "active")
@@ -39,9 +39,16 @@ public class User implements UserDetails {
     private List<Product> products = new ArrayList<>();
     private LocalDateTime dateOfCreated;
 
+
     @PrePersist
     private void init() {
         dateOfCreated = LocalDateTime.now();
+    }
+
+    // security
+
+    public boolean isAdmin() {
+        return roles.contains(Role.ROLE_ADMIN);
     }
 
     @Override

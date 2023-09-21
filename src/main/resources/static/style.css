@@ -1,0 +1,12 @@
+.carousel {
+    background: #d0d0d0;
+}
+.carousel-item__image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+form {
+    margin: 0 !important;
+    padding: 0 !important;
+}

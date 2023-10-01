@@ -27,6 +27,11 @@ public class UserController {
         return "login";
     }
 
+    @PostMapping("/login")
+    public String log() {
+        return "redirect:/?offset=0&&limit=5";
+    }
+
     @GetMapping("/my_room")
     public String myRoom(Principal principal, Model model) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");

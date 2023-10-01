@@ -1,7 +1,9 @@
 package com.example.sellars.controller;
 
 import com.example.sellars.models.Product;
+import com.example.sellars.models.User;
 import com.example.sellars.service.ProductService;
+import com.example.sellars.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,35 +18,48 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
+    private final UserService service;
 
-    @GetMapping(value="/static/{filename}")
+
+    @GetMapping(value = "/static/{filename}")
     public @ResponseBody byte[] getFile(@PathVariable("filename") String filename) throws IOException {
         InputStream in = getClass()
                 .getResourceAsStream("/static/" + filename);
         try {
             return in.readAllBytes();
 
-        } catch (Exception e){
+        } catch (Exception e) {
             var error = new String("ERROR: css file (/css/" + filename + ") not found");
             return error.getBytes();
         }
     }
 
     @GetMapping("/")
-    public String products(@RequestParam(name = "title", required = false) String title,
+    public String products(@RequestParam(value = "offset", defaultValue = "0") Integer offset,
+                           @RequestParam(value = "limit", defaultValue = "10") Integer limit,
+                           @RequestParam(value = "sort", defaultValue = "2") Integer sortField,
+                           @RequestParam(value = "category", defaultValue = "") String category,
+                           @RequestParam(value = "title", defaultValue = "") String title,
                            Principal principal, Model model) {
+        int size = productService.getPagesSize(limit, category, title);
+        model.addAttribute("products", productService.findAllByA(offset, limit, sortField, category, title));
         model.addAttribute("user", productService.getUserByPrincipal(principal));
-        model.addAttribute("products", productService.listProducts(title));
+        model.addAttribute("offset", offset);
+        model.addAttribute("pageSize", size);
+        model.addAttribute("pages", productService.getPagesList(size));
+        model.addAttribute("title", title);
         return "products";
     }
 
 
     @GetMapping("/product/{id}")
-    public String productInfo(@PathVariable Long id, Model model) {
+    public String productInfo(@PathVariable Long id, Model model, Principal principal) {
         Product product = productService.getProductById(id);
         model.addAttribute("product", product);
         model.addAttribute("images", product.getImages());
-        model.addAttribute("user", product.getUser());
+        model.addAttribute("productUser", product.getUser());
+        User user = principal == null ? null : service.getUserByEmail(principal.getName());
+        model.addAttribute("user", user);
         return "product-info";
     }
 

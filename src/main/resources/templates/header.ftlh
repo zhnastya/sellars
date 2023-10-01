@@ -1,9 +1,13 @@
-<div class="header border border-bottom-1 py-2 mb-2">
+<div class="header py-2 mb-2">
     <div class="container">
         <div class="d-flex align-items-center justify-content-between">
-            <div>
-                <a href="/" class="link-underline link-underline-opacity-0 h1 text-primary">Продаван</a>
-            </div>
+            <a href="/?offset=0&&limit=5" class="logo d-flex align-items-center">
+                <img class="logo__image" src="/../../../../static/hand.png">
+                <div class="logo__text">
+                    <div class="logo__title">prodavan</div>
+                    <div class="logo__subtitle">Товары со всей России</div>
+                </div>
+            </a>
             <div>
                 <#if user??>
                     <#if user.email??>

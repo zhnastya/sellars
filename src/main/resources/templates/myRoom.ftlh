@@ -25,7 +25,7 @@
         <dd class="col-sm-9">${date}</dd>
     </dl>
     <div>
-    <h4>Товары пользователя ${user.name}</h4>
+    <h4>Ваши товары:</h4>
     <#list products as product>
         <div>
             <#if product.previewImageId??>
@@ -47,6 +47,20 @@
         <input type="text" name="description" class="form-control mb-3" placeholder="Описание объявления">
         <input type="number" name="price" class="form-control mb-3" placeholder="Цена">
         <input type="text" name="city" class="form-control mb-3" placeholder="Город">
+        <label>
+            <select name="category" class="form-control mb-3" >
+                <option disabled>Категория товара</option>
+                <option value="Одежда">Одежда</option>
+                <option value="Техника">Техника</option>
+                <option value="Товары для дома">Товары для дома</option>
+                <option value="Товары для детей">Товары для детей</option>
+                <option value="Товары для животных">Товары для животных</option>
+                <option value="Авто">Авто</option>
+                <option value="Красота и здоровье">Красота и здоровье</option>
+                <option value="Недвижимость">Недвижимость</option>
+                <option value="Хобби и отдых">Хобби и отдых</option>
+            </select>
+        </label>
         <input type="file" name="file1" class="form-control mb-3" placeholder="Первая фотография">
         <input type="file" name="file2" class="form-control mb-3" placeholder="Вторая фотография">
         <input type="file" name="file3" class="form-control mb-3" placeholder="Третья фотография">

@@ -7,11 +7,15 @@ import com.example.sellars.repository.ProductRepository;
 import com.example.sellars.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,6 +28,10 @@ public class ProductService {
 
     public List<Product> listProducts(String title) {
         if (title != null) return productRepository.findByTitle(title);
+        return productRepository.findAll();
+    }
+
+    public List<Product> findAll() {
         return productRepository.findAll();
     }
 
@@ -48,7 +56,7 @@ public class ProductService {
         }
         log.info("Saving new Product. Title: {}; Author: {}", product.getTitle(), product.getUser().getName());
         Product productFromDb = productRepository.save(product);
-        if (!product.getImages().isEmpty()){
+        if (!product.getImages().isEmpty()) {
             productFromDb.setPreviewImageId(productFromDb.getImages().get(0).getId());
         }
         productRepository.save(product);
@@ -64,8 +72,8 @@ public class ProductService {
         return imageForProduct;
     }
 
-    public User getUserByPrincipal(Principal principal){
-        if (principal==null) return new User();
+    public User getUserByPrincipal(Principal principal) {
+        if (principal == null) return new User();
         return repository.findByEmail(principal.getName());
     }
 
@@ -75,5 +83,68 @@ public class ProductService {
 
     public Product getProductById(Long id) {
         return productRepository.findById(id).orElse(null);
+    }
+
+    public List<Product> findAllByA(Integer offset, Integer limit,
+                                    Integer sortField, String category, String title){
+        String sorting;
+        Sort.Direction sort;
+
+        if (sortField==0) {
+            sorting = "price";
+            sort = Sort.Direction.ASC;
+        } else if (sortField==1) {
+            sorting = "price";
+            sort = Sort.Direction.DESC;
+        } else if (sortField == 2) {
+            sorting = "dateOfCreated";
+            sort = Sort.Direction.DESC;
+        }else{
+            sorting = "dateOfCreated";
+            sort = Sort.Direction.ASC;
+        }
+        return getByCategoryAndTitle(offset, limit, sorting, sort, category, title).getContent();
+    }
+
+    private Page<Product> getByCategoryAndTitle(Integer offset, Integer limit,
+                                                String sorting,Sort.Direction sort,
+                                                String category, String title) {
+        if (category.isEmpty() && !title.isEmpty()) {
+            return productRepository.findByTitleContaining(title,
+                    PageRequest.of(offset, limit, Sort.by(sort, sorting)));
+        } else if (!category.isEmpty() && title.isEmpty()) {
+            return productRepository.findByCategoryContaining(category,
+                    PageRequest.of(offset, limit, Sort.by(sort, sorting)));
+        } else if (!title.isEmpty() && !category.isEmpty()) {
+            return productRepository.findByCategoryAndTitleContaining(category, title,
+                    PageRequest.of(offset, limit, Sort.by(sort, sorting)));
+        } else {
+            return productRepository.findAll(PageRequest.of(offset, limit, Sort.by(sort, sorting)));
+        }
+    }
+
+
+    public int getPagesSize (Integer limit, String category, String title) {
+        List<Product> allProducts;
+        if (!category.isEmpty() && title.isEmpty()) {
+            allProducts = productRepository.findAllByCategory(category);
+        } else if (category.isEmpty() && !title.isEmpty()) {
+            allProducts = productRepository.findByTitle(title);
+        } else if (!category.isEmpty() && !title.isEmpty()) {
+            allProducts = productRepository.findAllByCategoryAndTitle(category, title);
+        } else {
+            allProducts = productRepository.findAll();
+        }
+        return allProducts.size() % limit > 0
+                ? allProducts.size() / limit + 1
+                : allProducts.size() / limit;
+    }
+
+    public List<Integer> getPagesList(int size){
+        List<Integer> pages = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            pages.add(i);
+        }
+        return pages;
     }
 }

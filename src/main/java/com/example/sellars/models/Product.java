@@ -34,8 +34,10 @@ public class Product {
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn
     private User user;
+    @Column(name = "dateOfCreated")
     private LocalDateTime dateOfCreated;
-
+    @Column(name = "category")
+    private String category;
     @PrePersist
     private void init() {
         dateOfCreated = LocalDateTime.now();

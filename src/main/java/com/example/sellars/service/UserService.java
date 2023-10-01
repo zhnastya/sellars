@@ -29,7 +29,7 @@ public class UserService {
         String userEmail = user.getEmail();
         if (userRepository.findByEmail(userEmail) != null) return false;
         user.setActive(true);
-        user.getRoles().add(Role.ROLE_ADMIN);
+        user.getRoles().add(Role.ROLE_USER);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setAvatar(null);
         log.info("Saving new User with email: {}", userEmail);
@@ -41,7 +41,6 @@ public class UserService {
         String userEmail = user.getName();
         User user1 = userRepository.findByEmail(userEmail);
         if (user1!= null) {
-            userRepository.delete(user1);
             Image avatar = toImageEntity(file);
             user1.setAvatar(avatar);
             userRepository.save(user1);
@@ -76,7 +75,6 @@ public class UserService {
                 user.setActive(true);
                 log.info("Reban user with id - {}", id);
             }
-            userRepository.save(user);
         }
     }
 

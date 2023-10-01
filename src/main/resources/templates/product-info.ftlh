@@ -1,42 +1,59 @@
 <#import '*/page.ftlh' as u>
 
 <@u.page>
-    <h4 class="mb-3">Подробная информация о товаре</h4>
-
-    <div id="carouselExample" class="carousel slide mb-2">
-        <div class="carousel-inner">
-            <#list images as img>
-                <div class="carousel-item <#if img?index == 0>active</#if>" style="height: 200px">
-                    <div class="carousel-item__image d-flex justify-content-center w-100 h-100">
-                        <img src="/images/${img.id}" class="d-block h-100" />
+    <div class="product-info">
+        <div class="product-info__title">
+            ${product.title}
+        </div>
+        <div class="product-info__price">
+            ${product.price} руб.
+        </div>
+        <div id="carouselExample" class="carousel slide">
+            <div class="carousel-inner">
+                <#list images as img>
+                    <div class="carousel-item <#if img?index == 0>active</#if>" style="height: 200px">
+                        <div class="carousel-item__image d-flex justify-content-center w-100 h-100">
+                            <img src="/images/${img.id}" class="d-block h-100" />
+                        </div>
+                        <img src="/images/${img.id}" class="back-image" />
+                    </div>
+                </#list>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+        <div class="product-info__data">
+            <div class="product-info__data-groups">
+                <div class="group">
+                    <div class="group__title">
+                        Описание товара:
+                    </div>
+                    <div class="group__text">
+                        ${product.description}
                     </div>
                 </div>
-            </#list>
+                <div class="group">
+                    <div class="group__title">
+                        Город:
+                    </div>
+                    <div class="group__text">
+                        ${product.city}
+                    </div>
+                </div>
+            </div>
+            <a href="<#if user??>/user/${productUser.id}<#else>/login</#if>" class="header-user">
+                <div class="header-user__avatar" style="background-image: url('/images/avatar/${productUser.avatar.id}')">
+                </div>
+                <div class="header-user__name">
+                    ${productUser.name}
+                </div>
+            </a>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
     </div>
-
-    <dl class="row">
-        <dt class="col-sm-3">Название товара:</dt>
-        <dd class="col-sm-9">${product.title}</dd>
-
-        <dt class="col-sm-3">Описание товара:</dt>
-        <dd class="col-sm-9">${product.description}</dd>
-
-        <dt class="col-sm-3">Цена:</dt>
-        <dd class="col-sm-9">${product.price}</dd>
-
-        <dt class="col-sm-3 text-truncate">Город:</dt>
-        <dd class="col-sm-9">${product.city}</dd>
-
-        <dt class="col-sm-3">Автор:</dt>
-    </dl>
-    <a href="<#if user.email??>/user/${user.id}<#else>/login</#if>">${user.name}</a>
 </@u.page>

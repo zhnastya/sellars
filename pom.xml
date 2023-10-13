@@ -5,22 +5,19 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.15</version>
+        <version>2.7.16</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
     <artifactId>sellars</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>sellars</name>
-    <description>Avito clone</description>
+    <name>Avito clone</name>
+    <description>Comments</description>
     <properties>
         <java.version>11</java.version>
+        <spring-cloud.version>2021.0.8</spring-cloud.version>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -31,7 +28,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mail</artifactId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -41,12 +38,24 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>5.2.8.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>com.mysql</groupId>
@@ -69,6 +78,17 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>
@@ -82,33 +102,6 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.fizzed</groupId>
-                <artifactId>fizzed-watcher-maven-plugin</artifactId>
-                <version>1.0.6</version>
-                <configuration>
-                    <touchFile>target/classes/watcher.txt</touchFile>
-                    <watches>
-                        <watch>
-                            <directory>core/src/main/java</directory>
-                        </watch>
-                        <watch>
-                            <directory>ninja/src/main/java</directory>
-                        </watch>
-                        <watch>
-                            <directory>src/main/resources</directory>
-                            <exclude>*.ftlh</exclude>
-                        </watch>
-                    </watches>
-                    <goals>
-                        <goal>compile</goal>
-                        <goal>process-classes</goal>
-                    </goals>
-                    <profiles>
-                        <profile>optional-profile-to-activate</profile>
-                    </profiles>
                 </configuration>
             </plugin>
         </plugins>

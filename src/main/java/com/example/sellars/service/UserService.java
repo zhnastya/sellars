@@ -18,12 +18,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final FeignClientImpl impl;
 
     public boolean createUser(User user) {
         String userEmail = user.getEmail();
@@ -40,7 +42,7 @@ public class UserService {
     public void addAvatar(Principal user, MultipartFile file) throws IOException {
         String userEmail = user.getName();
         User user1 = userRepository.findByEmail(userEmail);
-        if (user1!= null) {
+        if (user1 != null) {
             Image avatar = toImageEntity(file);
             user1.setAvatar(avatar);
             userRepository.save(user1);
@@ -57,21 +59,21 @@ public class UserService {
         return avatar;
     }
 
-    public List<User> getUsers(){
-       return userRepository.findAll();
+    public List<User> getUsers() {
+        return userRepository.findAll();
     }
 
-    public User getUserByEmail(String email){
+    public User getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
-    public void blockUser(Long id){
+    public void blockUser(Long id) {
         User user = userRepository.findById(id).orElse(null);
-        if (user!=null){
-            if (user.isActive()){
+        if (user != null) {
+            if (user.isActive()) {
                 user.setActive(false);
                 log.info("Ban user with id - {}", id);
-            }else {
+            } else {
                 user.setActive(true);
                 log.info("Reban user with id - {}", id);
             }
@@ -84,7 +86,7 @@ public class UserService {
                 .collect(Collectors.toSet());
         user.getRoles().clear();
         for (String s : form.keySet()) {
-            if (roles.contains(s)){
+            if (roles.contains(s)) {
                 user.getRoles().add(Role.valueOf(s));
             }
         }

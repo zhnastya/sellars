@@ -1,4 +1,5 @@
 <#import '*/page.ftlh' as u>
+<#import '*/pagination.ftlh' as a>
 
 <@u.page>
     <div class="d-flex justify-content-between align-items-start">
@@ -19,51 +20,44 @@
     </div>
     <div class="products">
         <div class="categories">
-            <a href="/?offset=0&&limit=5&&category=Одежда">Одежда</a>
-            <a href="/?offset=0&&limit=5&&category=Техника">Техника</a>
-            <a href="/?offset=0&&limit=5&&category=Товары для дома">Товары для дома</a>
-            <a href="/?offset=0&&limit=5&&category=Товары для детей">Товары для детей</a>
-            <a href="/?offset=0&&limit=5&&category=Товары для животных">Товары для животных</a>
-            <a href="/?offset=0&&limit=5&&category=Авто">Авто</a>
-            <a href="/?offset=0&&limit=5&&category=Красота и здоровье">Красота и здоровье</a>
-            <a href="/?offset=0&&limit=5&&category=Недвижимость">Недвижимость</a>
-            <a href="/?offset=0&&limit=5&&category=Хобби и отдых">Хобби и отдых</a>
+            <a href="/?offset=0&&limit=10&&category=Одежда">Одежда</a>
+            <a href="/?offset=0&&limit=10&&category=Техника">Техника</a>
+            <a href="/?offset=0&&limit=10&&category=Товары для дома">Товары для дома</a>
+            <a href="/?offset=0&&limit=10&&category=Товары для детей">Товары для детей</a>
+            <a href="/?offset=0&&limit=10&&category=Товары для животных">Товары для животных</a>
+            <a href="/?offset=0&&limit=10&&category=Авто">Авто</a>
+            <a href="/?offset=0&&limit=10&&category=Красота и здоровье">Красота и здоровье</a>
+            <a href="/?offset=0&&limit=10&&category=Недвижимость">Недвижимость</a>
+            <a href="/?offset=0&&limit=10&&category=Хобби и отдых">Хобби и отдых</a>
         </div>
         <div class="products__items">
-               <#list products as product>
-                   <a href="/product/${product.id}" class="product">
-                       <#if product.previewImageId??>
-                           <div class="product__image" style="background-image: url('/images/${product.previewImageId}')"></div>
-                       </#if>
-                       <div class="product__info">
-                           <div class="product__title">
-                               ${product.title}
-                           </div>
-                           <div class="product__price">
-                               ${product.price} руб.
-                           </div>
-                       </div>
-                   </a>
-                </#list>
+            <#list products as product>
+                <a href="/product/${product.id}" class="product">
+                    <#if product.previewImageId??>
+                        <div class="product__image" style="background-image: url('/images/${product.previewImageId}')"></div>
+                    </#if>
+                    <div class="product__info">
+                        <div class="product__info-header">
+                            <div class="product__title">
+                                ${product.title}
+                            </div>
+                            <#if favorite??>
+                            <i data-id="#{product.id}" class="favorite bi bi-star<#if favorite?map(p -> p.id)?seq_contains(product.id)>-fill</#if>"></i>
+                            </#if>
+                        </div>
+                        <div class="product__info-bottom">
+                            <div class="product__date">
+                                ${product.dateOfCreated.format(formatter)}
+                            </div>
+                            <div class="product__price">
+                                ${product.price} руб.
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </#list>
         </div>
-        <#if pageSize!=0>
-            <nav aria-label="Page navigation example">
-              <ul class="pagination" >
-                <#if offset-1 < 0>
-                <#else >
-                    <li class="page-item"><a class="page-link" href="/?offset=${offset-1}&&limit=5">Назад</a></li>
-                </#if>
-                <#list pages as page>
-                    <li class="page-item"><a class="page-link" href="/?offset=${page}&&limit=5">${page+1}</a></li>
-                </#list>
-                <#if offset+1 < pageSize>
-                    <li class="page-item"><a class="page-link" href="/?offset=${offset+1}&&limit=5">Вперед</a></li>
-                <#else>
-                </#if>
-
-              </ul>
-            </nav>
-        </#if>
+        <@a.pages pages offset+1></@a.pages>
     </div>
 </@u.page>
 
@@ -76,5 +70,24 @@
         const url = new URL(location.href);
         url.searchParams.set('sort', ev.target.value);
         window.location = url.href;
+    });
+
+    document.querySelectorAll('.product .favorite').forEach(elem => {
+        elem.addEventListener('click', async (ev) => {
+            ev.preventDefault();
+            const id = ev.currentTarget.getAttribute('data-id');
+            const token = document.querySelector('meta[name="_csrf"]').content;
+            const header = document.querySelector('meta[name="_csrf_header"]').content;
+            const isLiked = elem.classList.contains('bi-star-fill')
+            const endpoint = isLiked ? '/deleteFromJS' : '/likeFromJS'
+
+            await fetch('/product/' + id + endpoint, {
+                method: isLiked ? 'DELETE' : 'POST',
+                credentials: 'include',
+                headers: {'Content-Type': 'application/json', [header]: token},
+            });
+
+            window.location.reload();
+        })
     });
 </script>

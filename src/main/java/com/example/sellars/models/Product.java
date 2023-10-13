@@ -34,6 +34,8 @@ public class Product {
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn
     private User user;
+    @ManyToMany(mappedBy = "likesProd")
+    private List<User> likeUsers;
     @Column(name = "dateOfCreated")
     private LocalDateTime dateOfCreated;
     @Column(name = "category")

@@ -1,7 +1,7 @@
 <div class="header py-2 mb-2">
     <div class="container">
         <div class="d-flex align-items-center justify-content-between">
-            <a href="/?offset=0&&limit=5" class="logo d-flex align-items-center">
+            <a href="/?offset=0&&limit=10" class="logo d-flex align-items-center">
                 <img class="logo__image" src="/../../../../static/hand.png">
                 <div class="logo__text">
                     <div class="logo__title">prodavan</div>

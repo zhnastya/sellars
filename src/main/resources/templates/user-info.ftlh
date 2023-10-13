@@ -2,7 +2,12 @@
 
 <@u.page>
     <#if user.avatar??>
-        <img src="/images/avatar/${user.avatar.id}" style="width:150px; ">
+        <label class="avatar" for="avatar"
+               style="background-image: url('/images/avatar/${user.avatar.id}')"></label>
+    <#else>
+        <label class="avatar" for="avatar">
+            <i class="bi bi-person-fill"></i>
+        </label>
     </#if>
     <dl class="row">
         <dt class="col-sm-3">Имя пользователя:</dt>

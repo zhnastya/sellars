@@ -3,8 +3,8 @@ pipeline {
   environment {
     MAVEN_ARGS=" -e clean install"
     registry = ""
-    dockerContainerName = 'bookapi'
-    dockerImageName = 'bookapi-api'
+    dockerContainerName = 'optimistic_goldstine'
+    dockerImageName = 'sha256'
   }
   stages {
     stage('Build') {

@@ -1,7 +1,10 @@
 <div class="d-flex align-items-center">
-    <a href="/my_room" class="header-user">
-        <div class="header-user__avatar" style="background-image: url('/images/avatar/${user.avatar.id}')">
-        </div>
+    <a href="/my-room" class="header-user">
+        <#if user.avatar??>
+        <div class="header-user__avatar" style="background-image: url('/images/avatar/${user.avatar.id}')"></div>
+        <#else>
+            <div class="header-user__avatar"><i class="bi bi-person-fill"></i></div>
+        </#if>
         <div class="header-user__name">
             ${user.name}
         </div>

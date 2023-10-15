@@ -1,74 +1,57 @@
 package com.example.sellars.controller;
 
-import com.example.sellars.models.User;
-import com.example.sellars.service.UserService;
+import com.example.sellars.model.Comment;
+import com.example.sellars.model.User;
+import com.example.sellars.service.feign.FeignClientService;
+import com.example.sellars.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.io.IOException;
+import javax.validation.Valid;
 import java.security.Principal;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Controller
+@Slf4j
+@RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
-
     private final UserService userService;
+    private final FeignClientService client;
 
 
-    @GetMapping("/login")
-    public String login() {
-        return "login";
-    }
+    @GetMapping("/{userId}")
+    public String userInfo(@Valid @PathVariable("userId") User user, Model model) {
+        log.info("Get запрос на подробную информацию о пользователе - " + user.getEmail());
+        List<Comment> comments = client.getAll(user.getId());
+        for (Comment comment : comments) {
+            User user1 = userService.getUserById(comment.getAuthorId());
+            comment.setAuthor(user1);
+        }
 
-    @PostMapping("/login")
-    public String log() {
-        return "redirect:/?offset=0&&limit=5";
-    }
-
-    @GetMapping("/my_room")
-    public String myRoom(Principal principal, Model model) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        User user = userService.getUserByEmail(principal.getName());
-        model.addAttribute("products", user.getProducts());
-        model.addAttribute("date", user.getDateOfCreated().format(formatter));
-        model.addAttribute("user", user);
-        model.addAttribute("image", user.getAvatar());
-        return "myRoom";
-    }
-
-
-    @GetMapping("/registration")
-    public String registration() {
-        return "registration";
-    }
-
-
-    @PostMapping("/registration")
-    public String createUser(User user) {
-        userService.createUser(user);
-        return "redirect:/login";
-    }
-
-    @PostMapping("/my_room")
-    public String createAvatar(@RequestParam("file") MultipartFile file, Principal user) throws IOException {
-        userService.addAvatar(user, file);
-        return "redirect:/my_room";
-    }
-
-
-    @GetMapping("/user/{user}")
-    public String userInfo(@PathVariable("user") User user, Model model) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         model.addAttribute("user", user);
         model.addAttribute("products", user.getProducts());
         model.addAttribute("date", user.getDateOfCreated().format(formatter));
+        model.addAttribute("formatter", formatter);
+        model.addAttribute("rating", client.getUserRate(user.getId()));
+        model.addAttribute("comments", comments);
         return "user-info";
+    }
+
+    @PostMapping("/{userId}/comment")
+    public String saveComm(@Valid @PathVariable("userId") User user,
+                           Comment comment, Principal principal) {
+        log.info("Запрос на публикацию комментария пользователю - " + user.getEmail());
+        User user1 = userService.getUserByEmail(principal.getName());
+        client.save(user.getId(), user1.getId(), comment);
+        return "redirect:/user/{userId}";
     }
 }

@@ -1,4 +1,4 @@
-package com.example.sellars.models.enums;
+package com.example.sellars.model.enums;
 
 import org.springframework.security.core.GrantedAuthority;
 

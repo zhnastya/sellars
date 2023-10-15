@@ -1,6 +1,6 @@
 package com.example.sellars.configurations;
 
-import com.example.sellars.service.CustomUserDetailsService;
+import com.example.sellars.service.user.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -21,8 +21,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/product/**", "/images/**", "/registration", "*/user/**",
-                        "/static/{filename}")
+                .antMatchers("/", "/product/**", "/images/**",
+                        "/registration", "/login/reset", "/static/{filename}")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -34,11 +34,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll();
     }
 
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder());
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {

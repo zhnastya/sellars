@@ -1,11 +1,11 @@
-package com.example.sellars.service;
+package com.example.sellars.service.email;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class DefaultEmailService {
     private final JavaMailSender emailSender;

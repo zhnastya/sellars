@@ -1,4 +1,4 @@
-package com.example.sellars.rabbit;
+package com.example.sellars.configurations;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;

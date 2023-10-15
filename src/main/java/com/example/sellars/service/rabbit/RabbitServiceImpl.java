@@ -1,7 +1,10 @@
-package com.example.sellars.rabbit;
+package com.example.sellars.service.rabbit;
 
+import com.example.sellars.configurations.RabbitConfig;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -12,24 +15,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import static com.example.sellars.rabbit.RabbitConfig.*;
-
 @Service
+@Slf4j
+@Qualifier("RabbitService")
 @RequiredArgsConstructor
-public class RabbitService {
+public class RabbitServiceImpl implements RabbitService {
     private final RabbitTemplate template;
-    public void createProviders(){
+
+    @Override
+    public void createProviders() {
         List<String> cities = List.of("Москва", "Санкт - Петербург", "Самара", "Воронеж", "Казань");
         Map<String, Object> map = new HashMap<>();
         for (String city : cities) {
             map.put("city", city);
             map.put("phone", "89898989898");
             map.put("check", "4229497465555");
-            template.convertAndSend(EXCHANGE_NAME, QUEUE_NAME, map);
+            template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitConfig.QUEUE_NAME, map);
         }
     }
 
-    public void createDelivery(){
+    @Override
+    public void createDelivery() {
         List<String> cities = List.of("Москва", "Санкт - Петербург", "Самара", "Воронеж", "Казань");
         Random random = new Random();
         for (int i = 1; i < 5; i++) {
@@ -44,11 +50,9 @@ public class RabbitService {
             map.put("dateOfDelivery", LocalDate.of(2023, 10, 14));
             map.put("duration", Duration.of(2, ChronoUnit.HOURS));
             map.put("isDanger", true);
-            map.put("weight", 5*i);
-            map.put("km", 100*i);
-            template.convertAndSend(EXCHANGE_NAME2, QUEUE_NAME2, map);
+            map.put("weight", 5 * i);
+            map.put("km", 100 * i);
+            template.convertAndSend(RabbitConfig.EXCHANGE_NAME2, RabbitConfig.QUEUE_NAME2, map);
         }
-
-
     }
 }

@@ -1,8 +1,8 @@
 package com.example.sellars.controller;
 
-import com.example.sellars.models.User;
-import com.example.sellars.models.enums.Role;
-import com.example.sellars.service.UserService;
+import com.example.sellars.model.User;
+import com.example.sellars.model.enums.Role;
+import com.example.sellars.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -22,28 +22,28 @@ public class AdminController {
 
 
     @GetMapping("/admin")
-    public String admin(Model model){
+    public String admin(Model model) {
         model.addAttribute("users", userService.getUsers());
         return "admin";
     }
 
 
-    @PostMapping("/admin/user/ban/{id}")
-    public String userBlock(@PathVariable("id") Long id){
+    @PostMapping("/admin/ban/user/{id}")
+    public String userBlock(@PathVariable("id") Long id) {
         userService.blockUser(id);
         return "redirect:/admin";
     }
 
-    @GetMapping("/admin/user/edit/{user}")
-    public String updateUser(@PathVariable("user")User user, Model model){
+    @GetMapping("/admin/edit/user/{user}")
+    public String updateUser(@PathVariable("user") User user, Model model) {
         model.addAttribute("user", user);
         model.addAttribute("roles", Role.values());
         return "user-edit";
     }
 
-    @PostMapping("/admin/user/edit")
+    @PostMapping("/admin/edit/user")
     public String editUser(@RequestParam("userId") User user,
-                           @RequestParam("roles") Map<String, String> form){
+                           @RequestParam("roles") Map<String, String> form) {
         userService.changeUserRole(user, form);
         return "redirect:/admin";
     }

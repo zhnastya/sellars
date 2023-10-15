@@ -4,7 +4,7 @@
 <#function min x y>
     <#if (x<y)><#return x><#else><#return y></#if>
 </#function>
-<#macro pages totalPages p>
+<#macro pages totalPages p query>
     <nav aria-label="Page navigation example">
         <ul class="pagination">
             <#assign size = totalPages?size>
@@ -17,20 +17,20 @@
                 <#assign interval = (p-2)..(p+2)>
             </#if>
             <#if !(interval?seq_contains(1))>
-                <li class="page-item"><a class="page-link" href="/?offset=${0}&&limit=${limit}">1</a></li>
+                <li class="page-item"><a class="page-link" href="/?offset=${0}&limit=${limit}${query}">1</a></li>
                 <li class="page-item"><a class="page-link disabled">...</a></li>
                 <#rt>
             </#if>
             <#list interval as page>
                 <#if page=p>
-                    <li class="page-item active"><a class="page-link" href="/?offset=${page-1}&&limit=${limit}">${page}</a></li>
+                    <li class="page-item active"><a class="page-link" href="/?offset=${page-1}&limit=${limit}${query}">${page}</a></li>
                 <#else>
-                    <li class="page-item"><a class="page-link" href="/?offset=${page-1}&&limit=${limit}">${page}</a></li>
+                    <li class="page-item"><a class="page-link" href="/?offset=${page-1}&limit=${limit}${query}">${page}</a></li>
                 </#if>
             </#list>
             <#if !(interval?seq_contains(size))>
                 <li class="page-item"><a class="page-link disabled">...</a></li>
-                <li class="page-item"><a class="page-link" href="/?offset=${size-1}&&limit=${limit}">${size-1}</a></li>
+                <li class="page-item"><a class="page-link" href="/?offset=${size-1}&limit=${limit}${query}">${size-1}</a></li>
                 <#lt>
             </#if>
         </ul>

@@ -1,4 +1,4 @@
-package com.example.sellars.service;
+package com.example.sellars.service.user;
 
 import com.example.sellars.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
-    private final UserRepository userRepository;
+    private final UserRepository repository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email);
+        return repository.findByEmail(email);
     }
 }

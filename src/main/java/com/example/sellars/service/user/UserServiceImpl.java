@@ -1,10 +1,11 @@
-package com.example.sellars.service;
+package com.example.sellars.service.user;
 
-import com.example.sellars.models.Image;
-import com.example.sellars.models.User;
-import com.example.sellars.models.enums.Role;
+import com.example.sellars.model.Image;
+import com.example.sellars.model.User;
+import com.example.sellars.model.enums.Role;
 import com.example.sellars.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,32 +23,10 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class UserService {
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final FeignClientImpl impl;
 
-    public boolean createUser(User user) {
-        String userEmail = user.getEmail();
-        if (userRepository.findByEmail(userEmail) != null) return false;
-        user.setActive(true);
-        user.getRoles().add(Role.ROLE_USER);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setAvatar(null);
-        log.info("Saving new User with email: {}", userEmail);
-        userRepository.save(user);
-        return true;
-    }
-
-    public void addAvatar(Principal user, MultipartFile file) throws IOException {
-        String userEmail = user.getName();
-        User user1 = userRepository.findByEmail(userEmail);
-        if (user1 != null) {
-            Image avatar = toImageEntity(file);
-            user1.setAvatar(avatar);
-            userRepository.save(user1);
-        }
-    }
 
     private Image toImageEntity(MultipartFile file) throws IOException {
         Image avatar = new Image();
@@ -59,14 +38,65 @@ public class UserService {
         return avatar;
     }
 
+
+    @Override
+    public boolean createUser(User user) {
+        String userEmail = user.getEmail();
+        if (userRepository.findByEmail(userEmail) != null) return false;
+        user.setActive(true);
+        user.getRoles().add(Role.ROLE_USER);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setAvatar(null);
+        userRepository.save(user);
+        return true;
+    }
+
+
+    @Override
+    public boolean updateUser(User user) {
+        String userEmail = user.getEmail();
+        User user1 = userRepository.findByEmail(userEmail);
+        if (user1 == null) return false;
+        userRepository.save(user);
+        return true;
+    }
+
+    @Override
+    public boolean deleteUser(Principal principal) {
+        User user1 = userRepository.findByEmail(principal.getName());
+        if (user1 == null) return false;
+        userRepository.deleteById(user1.getId());
+        return true;
+    }
+
+    @Override
+    @SneakyThrows
+    public void addAvatar(Principal user, MultipartFile file) {
+        String userEmail = user.getName();
+        User user1 = userRepository.findByEmail(userEmail);
+        if (user1 != null) {
+            Image avatar = toImageEntity(file);
+            user1.setAvatar(avatar);
+            userRepository.save(user1);
+        }
+    }
+
+    @Override
     public List<User> getUsers() {
         return userRepository.findAll();
     }
 
+    @Override
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
+    @Override
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElseThrow();
+    }
+
+    @Override
     public void blockUser(Long id) {
         User user = userRepository.findById(id).orElse(null);
         if (user != null) {
@@ -80,6 +110,7 @@ public class UserService {
         }
     }
 
+    @Override
     public void changeUserRole(User user, Map<String, String> form) {
         Set<String> roles = Arrays.stream(Role.values())
                 .map(Role::name)

@@ -57,7 +57,8 @@
                 </a>
             </#list>
         </div>
-        <@a.pages pages offset+1></@a.pages>
+        <#assign query = '&sort=${sort}&category=${category}'>
+        <@a.pages pages offset+1 query></@a.pages>
     </div>
 </@u.page>
 

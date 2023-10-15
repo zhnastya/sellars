@@ -51,25 +51,31 @@
                 <input type="hidden" name="_csrf" value="${_csrf.token}">
                 <input class="btn btn-primary" type="submit" value="Лайкнуть товар"/>
             </form>
-            <a href="<#if user??>/user/${productUser.id}<#else>/login</#if>" class="header-user">
-                <#if productUser.avatar??>
-                    <div class="header-user__avatar" style="background-image: url('/images/avatar/${productUser.avatar.id}')"></div>
-                <#else>
-                    <div class="header-user__avatar"><i class="bi bi-person-fill"></i></div>
-                </#if>
-                <div class="header-user__name">
-                    ${productUser.name}
-                </div>
+            <div class="d-flex align-items-center product-info__data-bottom">
+                <a href="<#if user??>/user/${productUser.id}<#else>/login</#if>" class="header-user">
+                    <#if productUser.avatar??>
+                        <div class="header-user__avatar" style="background-image: url('/images/avatar/${productUser.avatar.id}')"></div>
+                    <#else>
+                        <div class="header-user__avatar"><i class="bi bi-person-fill"></i></div>
+                    </#if>
+                    <div class="header-user__name">
+                        ${productUser.name}
+                    </div>
+                </a>
                 <div class="rating-result">
                     <#list 1..5 as x>
-                        <#if x <=rating>
+                        <#if x <= rating>
                             <span class="active"></span>
-                            <#else>
-                                <span></span>
+                        <#else>
+                            <span></span>
                         </#if>
                     </#list>
                 </div>
-            </a>
+            </div>
         </div>
     </div>
 </@u.page>
+
+<script type="text/javascript">
+
+</script>

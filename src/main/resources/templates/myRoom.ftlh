@@ -19,55 +19,59 @@
                     </#if>
                     <div class="user-info-links">
                         <a href="/my-room/change/user" class="btn btn-light">Изменить профиль</a>
-                        <a href="/my-room/my-products" class="btn btn-light">Ваши товары:</a>
-                        <a href="/my-room/create/product" class="btn btn-light">Создать товар:</a>
-                        <a href="/my-room/like-products" class="btn btn-light">Лайкнутые товары:</a>
-                        <a href="/my-room/comments" class="btn btn-light">Мои комментарии:</a>
                     </div>
                 </form>
-                <div class="user-info__data">
-                    <div class="rodjer">
-                        <img src="/static/rodjer.gif" alt="rodjer"/>
+                <div class="user-info__right">
+                    <div class="user-info__data">
+                        <div class="rodjer">
+                            <img src="/static/rodjer.gif" alt="rodjer"/>
+                        </div>
+                        <div class="group">
+                            <div class="group__title">
+                                Имя:
+                            </div>
+                            <div class="group__text">
+                                ${user.name}
+                            </div>
+                        </div>
+                        <div class="group">
+                            <div class="group__title">
+                                Email:
+                            </div>
+                            <div class="group__text">
+                                ${user.email}
+                            </div>
+                        </div>
+                        <div class="group">
+                            <div class="group__title">
+                                Имя:
+                            </div>
+                            <div class="group__text">
+                                ${user.name}
+                            </div>
+                        </div>
+                        <div class="group">
+                            <div class="group__title">
+                                Телефон:
+                            </div>
+                            <div class="group__text">
+                                ${user.phoneNumber}
+                            </div>
+                        </div>
+                        <div class="group">
+                            <div class="group__title">
+                                Дата регистрации:
+                            </div>
+                            <div class="group__text">
+                                ${date}
+                            </div>
+                        </div>
                     </div>
-                    <div class="group">
-                        <div class="group__title">
-                            Имя:
-                        </div>
-                        <div class="group__text">
-                            ${user.name}
-                        </div>
-                    </div>
-                    <div class="group">
-                        <div class="group__title">
-                            Email:
-                        </div>
-                        <div class="group__text">
-                            ${user.email}
-                        </div>
-                    </div>
-                    <div class="group">
-                        <div class="group__title">
-                            Имя:
-                        </div>
-                        <div class="group__text">
-                            ${user.name}
-                        </div>
-                    </div>
-                    <div class="group">
-                        <div class="group__title">
-                            Телефон:
-                        </div>
-                        <div class="group__text">
-                            ${user.phoneNumber}
-                        </div>
-                    </div>
-                    <div class="group">
-                        <div class="group__title">
-                            Дата регистрации:
-                        </div>
-                        <div class="group__text">
-                            ${date}
-                        </div>
+                    <div class="user-info__methods">
+                        <a href="/my-room/products" class="btn btn-light">Ваши товары</a>
+                        <a href="/my-room/create/product" class="btn btn-light">Создать товар</a>
+                        <a href="/my-room/like-products" class="btn btn-light">Лайкнутые товары</a>
+                        <a href="/my-room/comments" class="btn btn-light">Мои комментарии</a>
                     </div>
                 </div>
             </div>

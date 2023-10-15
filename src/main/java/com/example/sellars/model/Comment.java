@@ -1,4 +1,4 @@
-package com.example.sellars.models;
+package com.example.sellars.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -20,4 +20,5 @@ public class Comment {
     private Double rating;
     private String description;
     private LocalDateTime timeOfCreated;
+    private User author;
 }

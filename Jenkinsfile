@@ -1,9 +1,11 @@
-stage("Prepare container") {
-  agent {
-    docker {
-      image 'openjdk:11.0.5-slim'
-      args '-v $HOME/.m2:/root/.m2'
-    }
+
+pipeline {
+    agent any
+  environment {
+    MAVEN_ARGS=" -e clean install"
+    registry = ""
+    dockerContainerName = 'optimistic_goldstine'
+    dockerImageName = 'sha256'
   }
   stages {
     stage('Build') {

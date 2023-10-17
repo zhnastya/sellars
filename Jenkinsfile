@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
   environment {
@@ -8,23 +9,20 @@ pipeline {
   }
   stages {
     stage('Build') {
-       steps {
-   withMaven(maven: 'MAVEN_ENV') {
-            sh "mvn ${MAVEN_ARGS}"
-        }
-       }
-    }
-
- stage('clean container') {
       steps {
-       sh 'docker ps -f name=${dockerContainerName} -q | xargs --no-run-if-empty docker container stop'
-       sh 'docker container ls -a -fname=${dockerContainerName} -q | xargs -r docker container rm'
-       sh 'docker images -q --filter=reference=${dockerImageName} | xargs --no-run-if-empty docker rmi -f'
+        checkout scm
+        sh './mvnw compile'
       }
     }
-  stage('docker-compose start') {
+    stage('Test') {
       steps {
-       sh 'docker compose up -d'
+        sh './mvnw test'
+        junit '**/target/surefire-reports/TEST-*.xml'
+      }
+    }
+    stage('Package') {
+      steps {
+        sh './mvnw package -DskipTests'
       }
     }
   }

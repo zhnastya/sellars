@@ -6,6 +6,8 @@ import com.example.sellars.service.feign.FeignClientService;
 import com.example.sellars.service.product.ProductService;
 import com.example.sellars.service.rabbit.RabbitServiceImpl;
 import com.example.sellars.service.user.UserService;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,7 @@ import java.io.InputStream;
 import java.security.Principal;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+
 
 @Controller
 @Slf4j
@@ -41,6 +44,8 @@ public class ProductController {
         }
     }
 
+
+    @ApiResponse(content = {@Content(mediaType = "text/html")})
     @GetMapping("/")
     public String products(@RequestParam(value = "offset", defaultValue = "0") Integer offset,
                            @RequestParam(value = "limit", defaultValue = "10") Integer limit,

@@ -1,20 +1,27 @@
 version: '3'
 
 services:
-  docker-mysql:
-    image: mysql:5.7
+  mysql:
+    image: mysql:8.1.0
     environment:
-      - MYSQL_ROOT_PASSWORD=Nastya1029384756
-      - MYSQL_DATABASE=sellars
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=Nastya1029384756
+      'MYSQL_ROOT_PASSWORD': 'Nastya1029384756'
+      'MYSQL_DATABASE': 'sellars'
+    network_mode: 'host'
     ports:
-      - "3307:3306"
-  localRabbitMQ:
+      - "3306:3306"
+  rabbitmq:
     image: rabbitmq:3-management-alpine
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
+    network_mode: 'host'
     ports:
       - 5672:5672
       - 15672:15672
+  sellars:
+    build: '.'
+    restart: on-failure
+    network_mode: 'host'
+    depends_on:
+      - mysql
+      - rabbitmq

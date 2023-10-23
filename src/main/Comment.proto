@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package grpc.server.grpc_server.pet;
+import "google/protobuf/timestamp.proto";
+
+message CreateCommentRequest {
+  Comment comment = 1;
+
+  message Comment {
+    string desc = 2;
+    int64 userID = 3;
+    double rating = 4;
+  }
+}
+
+message CreateCommentResponse{
+  Comment comment = 1;
+
+  message Comment {
+    string desc = 2;
+    int64 userID = 3;
+    double rating = 4;
+    google.protobuf.Timestamp time = 5;
+  }
+}
+
+message FindByUserIdCommentRequest {
+  int64 userId = 1;
+}
+
+message FindByUserIdCommentResponse {
+  Comment comment = 1;
+
+  message Comment {
+    string desc = 2;
+    int64 userID = 3;
+    double rating = 4;
+    google.protobuf.Timestamp time = 5;
+  }
+}
+
+message ErrorResponse {
+  string error_name = 1;
+}
+
+service CommentService {
+  rpc CreateComment (CreateCommentRequest) returns (CreateCommentResponse);
+  rpc FindByUserIdComments (FindByUserIdCommentRequest) returns (stream FindByUserIdCommentResponse);
+}
